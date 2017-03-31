@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.2.0.final using JasperReports Library version 6.2.0  -->
+<!-- 2016-06-09T18:27:11 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Calendar_View" pageWidth="1000" pageHeight="840" columnWidth="960" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="31c5bd3e-7f1a-4ab1-b4e4-a617f592984c">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="ireport.jasperserver.url" value="http://14.141.42.122:8080/ppmreports/"/>
+	<property name="ireport.jasperserver.user" value="developer|claritydev"/>
+	<property name="ireport.jasperserver.report.resource" value="/Test/Calendar_View_Actuals_INV_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/Test/Calendar_View_Actuals_INV"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Clarity Dev"/>
+	<parameter name="param_start_year" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[Calendar.getInstance().get(Calendar.YEAR)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="param_end_year" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[Calendar.getInstance().get(Calendar.YEAR)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="param_inv" class="java.math.BigDecimal"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT INV.CODE,INV.NAME PROJECT_NAME,FIN_P.NAME COST_PLAN_NAME
+,TO_CHAR(ACT.TRANSDATE,'YYYY-MM-DD') TRANSDATE
+,ACT.ACTUALS
+FROM INV_INVESTMENTS INV 
+LEFT JOIN FIN_PLANS FIN_P ON FIN_P.OBJECT_ID=INV.ID AND FIN_P.PLAN_TYPE_CODE='FORECAST' AND FIN_P.IS_PLAN_OF_RECORD=1
+LEFT JOIN 
+(
+SELECT P.INVESTMENT_ID,P.TRANSDATE,SUM(V.TOTALCOST) ACTUALS
+FROM PPA_WIP P 
+LEFT JOIN PPA_WIP_VALUES V ON V.TRANSNO=P.TRANSNO AND V.CURRENCY_TYPE='HOME' 
+WHERE  P.STATUS=0
+GROUP BY  P.INVESTMENT_ID,P.TRANSDATE
+)ACT ON ACT.INVESTMENT_ID=INV.ID
+WHERE INV.ID=$P{param_inv}
+AND TRANSDATE BETWEEN '01-JAN-'|| $P{param_start_year} AND '31-DEC-'|| $P{param_end_year}]]>
+	</queryString>
+	<field name="CODE" class="java.lang.String"/>
+	<field name="PROJECT_NAME" class="java.lang.String"/>
+	<field name="COST_PLAN_NAME" class="java.lang.String"/>
+	<field name="TRANSDATE" class="java.lang.String"/>
+	<field name="ACTUALS" class="java.math.BigDecimal"/>
+	<title>
+		<band height="89" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement x="0" y="0" width="960" height="60" uuid="e2405e26-5569-42b7-9419-c2ff4cae760b"/>
+				<textElement textAlignment="Center" verticalAlignment="Top" markup="styled">
+					<font fontName="Calibri" size="24" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Daily Actual cost of "+ "<font color='blue'>"+$F{PROJECT_NAME}+"</font>" +"\n"+" from year " + "<font color='blue'>"+$P{param_start_year} +"</font>" + " to " + "<font color='blue'>"+$P{param_end_year}+"</font>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="221" y="67" width="60" height="17" uuid="dcce7af0-0b13-4701-ab66-15e88850b975">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<50 USD"]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="204" y="67" width="17" height="17" backcolor="#FEE08B" uuid="ec2e3753-10a7-4203-8704-8a07f7e12a24">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="298" y="67" width="60" height="17" uuid="53041576-eadf-4ddc-9c8e-6dd196d70e79">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<100 USD"]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="281" y="67" width="17" height="17" backcolor="#FFFFBF" uuid="6554077e-a94b-4175-9e0f-e8568a5cc86b">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="376" y="67" width="60" height="17" uuid="402eb906-3e01-4ce0-98b2-e7dac4230daf">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<150 USD"]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="358" y="67" width="17" height="17" backcolor="#D9EF8B" uuid="ca50b19d-6a89-417e-b1a4-bd9b68fc73b1">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="453" y="67" width="60" height="17" uuid="2c6fe1d6-2707-4bc6-9910-0cb9bafdd5a2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<200 USD"]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="436" y="67" width="17" height="17" backcolor="#A6D96A" uuid="284aab51-b677-42bf-9f40-3f77af502669">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="530" y="67" width="60" height="17" uuid="4c4df6f6-1c37-4fac-a91e-266752bff5d6">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<250 USD"]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="513" y="67" width="17" height="17" backcolor="#66BD63" uuid="548abcb6-dffa-4132-a019-9dc648d6d4c4">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="589" y="67" width="17" height="17" backcolor="#1A9850" uuid="a5dc0381-6c9d-41d1-b9c9-42ee730567a8">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="606" y="67" width="66" height="17" uuid="08290731-3192-4b8b-ab82-e90d93888458">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<300 USD"]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="674" y="67" width="17" height="17" backcolor="#006837" uuid="e8796f96-cd72-4a7c-aae9-a56978b4e1d7">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="691" y="67" width="69" height="17" uuid="05813b64-c3c9-446b-b726-14366d2a0ab4">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[">300 USD"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<summary>
+		<band height="220">
+			<componentElement>
+				<reportElement x="0" y="0" width="960" height="220" uuid="fbb36477-0a3a-4763-98ce-94237b08671e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<cvc:customvisualization xmlns:cvc="http://www.jaspersoft.com/cvcomponent" xsi:schemaLocation="http://www.jaspersoft.com/cvcomponent http://www.jaspersoft.com/cvcomponent/component.xsd" evaluationTime="Report">
+					<cvc:itemProperty name="script" value="Calendar_View.min.js"/>
+					<cvc:itemProperty name="css" value="Calendar_View.css"/>
+					<cvc:cvData>
+						<dataset/>
+						<cvc:item>
+							<cvc:itemProperty name="date">
+								<valueExpression><![CDATA[$F{TRANSDATE}]]></valueExpression>
+							</cvc:itemProperty>
+							<cvc:itemProperty name="start_year">
+								<valueExpression><![CDATA[$P{param_start_year}]]></valueExpression>
+							</cvc:itemProperty>
+							<cvc:itemProperty name="end_year">
+								<valueExpression><![CDATA[$P{param_end_year}]]></valueExpression>
+							</cvc:itemProperty>
+							<cvc:itemProperty name="open">
+								<valueExpression><![CDATA[$F{ACTUALS}]]></valueExpression>
+							</cvc:itemProperty>
+						</cvc:item>
+					</cvc:cvData>
+				</cvc:customvisualization>
+			</componentElement>
+		</band>
+	</summary>
+</jasperReport>
