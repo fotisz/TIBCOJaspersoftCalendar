@@ -1,3 +1,3 @@
 # tibco-jaspersoft-calendar
 
-Custom Visualisation Component (calendar) for TIBCO Jaspersoft
+Custom Visualisation Component (Calendar view) for TIBCO Jaspersoft
